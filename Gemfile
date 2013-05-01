@@ -6,4 +6,5 @@ gemspec
 group :test do
   gem "rack-test"
   gem "simplecov"
+  gem 'turn', :require => false
 end

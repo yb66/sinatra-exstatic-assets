@@ -1,3 +1,4 @@
+require 'turn'
 path = File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
 $:.unshift(path) unless $:.include?(path)
 
