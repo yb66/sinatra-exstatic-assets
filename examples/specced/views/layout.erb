@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+	<title>Example</title>
+	<%= favicon_link_tag %>
+	<%= stylesheet_link_tag 'http://fonts.googleapis.com/css?family=Quicksand|Faster+One|Cherry+Swash:700|Titillium+Web', rel: 'stylesheet', type: 'text/css' %>
+	<%= stylesheet_link_tag "/css/base.css" %>
+	<%= stylesheet_link_tag "/css/screen.css" %>
+	<%= javascript_script_tag "http://code.jquery.com/jquery-1.9.1.min.js" %>
+	
+</head>
+
+<body>
+  <header role='banner'>
+  <a href="http://www.flickr.com/photos/28931095@N03/3609420787/" title="Magic Ball by Sam Bald, on Flickr"><%= image_tag "http://farm3.staticflickr.com/2474/3609420787_f7fc0e53c7.jpg", width: "500", height: "375", alt: "Magic Ball" %></a>
+      <hgroup>
+          <h1>Sinatra Static Assets</h1>
+          <h2>Helpers for your JS, CSS and anything static</h2>
+      </hgroup>
+  </header>
+  
+  <nav>
+      <ul>
+          <li><a href="/">Main app</a></li>
+          <li><a href="/app2">App 2</a></li>
+          <li><a href="https://rubygems.org/gems/sinatra-static-assets">Rubygems</a></li>
+          <li><a href="https://github.com/wbzyl/sinatra-static-assets">Source code</a></li>
+      </ul>
+  </nav>
+  <article>
+    <%= yield %>
+  </article>
+  
+  
+  <footer>
+      <p>&copy; <%= Time.now.year %> See the LICENCE file for more.</p>
+  </footer>
+</body>
+</html>
