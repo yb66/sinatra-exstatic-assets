@@ -80,7 +80,7 @@ module Sinatra
     end
 
     module Private
-
+      private
       def sss_url_for(addr, options=nil)
         options ||= {}
         absolute = options.fetch :absolute, false
@@ -104,7 +104,6 @@ module Sinatra
         href = sss_url_for( asset )
         Tag.new "link", DEFAULT_CSS.merge(:href => href)
                                    .merge(options)
-            
       end
 
       DEFAULT_JS = {
