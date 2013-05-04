@@ -48,15 +48,34 @@ module Sinatra
         end
         # TODO fail if asset_dir.nil?
         super filename
-        @fullpath = File.join asset_dir, filename
+        @fullpath = File.join( asset_dir, filename ) unless is_uri?
       end
 
       def timestamp
-        @timestamp ||= File.exists?(fullpath) && File.mtime(fullpath).to_i
+        @timestamp ||= !is_uri? && File.exists?(fullpath) && File.mtime(fullpath).to_i
       end
 
       def querystring
         timestamp ? "?ts=#{timestamp}" : nil
+      end
+
+      # We only need to check for a scheme/protocol to know
+      # it's not a file.
+      URI_PATTERN = %r{\A
+                    (?:
+                      [A-z]+
+                      \:
+                    )?        # The protocol part. It's optional.
+                    // /?     # There will always be at least 2 //
+                  }x
+
+      # @note
+      #   A url will match:
+      #   http://example.com
+      #   //example.com
+      #   but www.example.com or example.com will be treated as a file.
+      def is_uri?
+        self =~ URI_PATTERN ? true : false
       end
     end
 
