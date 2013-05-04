@@ -37,20 +37,6 @@ module Sinatra
 
     end
 
-    class Href < Tag
-      # TODO change this
-      def is_uri?
-        @options[:href] =~ %r{\A
-                  [\-a-z]+
-                  ://         # wtf?
-                    |
-                  ^cid:       # wtf?
-                    |
-                  ^//         # again, wtf?
-                \Z}x
-      end
-    end
-
 
     class Asset < ::String
 
