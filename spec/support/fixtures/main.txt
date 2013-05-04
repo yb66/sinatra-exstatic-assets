@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+	<title>Example</title>
+	<link href="/favicon.ico" rel="icon" />
+	<link charset="utf-8" href="http://fonts.googleapis.com/css?family=Quicksand|Faster+One|Cherry+Swash:700|Titillium+Web" media="screen" rel="stylesheet" type="text/css" />
+	<link charset="utf-8" href="/css/base.css?ts=1367585394" media="screen" rel="stylesheet" />
+	<link charset="utf-8" href="/css/screen.css?ts=1367612251" media="screen" rel="stylesheet" />
+	<script charset="utf-8" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	
+</head>
+
+<body>
+  <header role='banner'>
+  <a href="http://www.flickr.com/photos/28931095@N03/3609420787/" title="Magic Ball by Sam Bald, on Flickr"><img alt="Magic Ball" height="375" src="http://farm3.staticflickr.com/2474/3609420787_f7fc0e53c7.jpg" width="500" /></a>
+      <hgroup>
+          <h1>Sinatra Static Assets</h1>
+          <h2>Helpers for your JS, CSS and anything static</h2>
+      </hgroup>
+  </header>
+  
+  <nav>
+      <ul>
+          <li><a href="/">Main app</a></li>
+          <li><a href="/app2">App 2</a></li>
+          <li><a href="https://rubygems.org/gems/sinatra-static-assets">Rubygems</a></li>
+          <li><a href="https://github.com/wbzyl/sinatra-static-assets">Source code</a></li>
+      </ul>
+  </nav>
+  <article>
+    <header>
+    <h1>
+        <a href="#" title="Link to this post" 
+rel="bookmark">Usage</a>
+    </h1>
+</header>
+<p>Note that there is a Main App and an App2. This is to demonstrate that you can give links relative to the app, but if they are mounted with an extra prefix (using Rack#map, for example) the helper will respect that and produce the right href attribute.</p>
+<section><header><h2>Installation and loading</h2></header>
+  <p>Start by installing:</p>
+  <code>gem 'sinatra-static-assets'</code>
+  <p>Then require it in your Sinatra app.</p>
+  <code>require 'sinatra/static_assets'</code>
+</section>
+<section>
+<section>
+  <header><h2>The helpers</h2></header>
+  <p>Use these helpers in your views.<p>
+  <section id='stylesheet_tag'>
+    <header>
+        <h3>stylesheet_tag</h3>
+    </header>
+    <p>The code:
+    </p>
+    <code>stylesheet_tag "/css/screen.css"</code>
+    <p>Output:</p>
+    <samp>
+      &lt;link charset=&quot;utf-8&quot; href=&quot;&#x2F;css&#x2F;screen.css?ts=1367612251&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; &#x2F;&gt;
+    </samp>
+    <footer><p>Also known as:
+      <ul>
+        <li><code>css_tag</code></li>
+      </ul>
+    </footer>
+  </section>
+  <section id='javascript_tag'>
+    <header>
+      <h3>javascript_tag</h3>
+    </header>
+    <p>The code:
+    </p>
+    <code>javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js"</code>
+    <p>Output:</p>
+    <samp>
+      &lt;script charset=&quot;utf-8&quot; src=&quot;http:&#x2F;&#x2F;code.jquery.com&#x2F;jquery-1.9.1.min.js&quot;&gt;&lt;&#x2F;script&gt;
+    </samp>
+    <footer><p>Also known as:
+      <ul>
+        <li><code>javascript_include_tag</code></li>
+        <li><code>js_tag</code></li>
+        <li><code>script_tag</code></li>
+      </ul> 
+    </footer>
+  </section>
+  <section id='image_tag'>
+    <header>
+      <h3>image_tag</h3>
+    </header>
+    <p>The code:
+    </p>
+    <code>image_tag "http://farm3.staticflickr.com/2474/3609420787_f7fc0e53c7.jpg", width: "500", height: "375", alt: "Magic Ball"</code>
+    <p>Output:</p>
+    <samp>
+      &lt;img alt=&quot;Magic Ball&quot; height=&quot;375&quot; src=&quot;http:&#x2F;&#x2F;farm3.staticflickr.com&#x2F;2474&#x2F;3609420787_f7fc0e53c7.jpg&quot; width=&quot;500&quot; &#x2F;&gt;
+    </samp>
+    <footer><p>Also known as:
+      <ul>
+        <li><code>img_tag</code></li>
+      </ul>
+    </footer>
+  </section>
+  <section id='favicon_tag'>
+    <header>
+      <h3>favicon_tag</h3>
+    </header>
+    <p>The code:
+    </p>
+    <code>favicon_tag</code>
+    <p>Output:</p>
+    <samp>
+      &lt;link href=&quot;&#x2F;favicon.ico&quot; rel=&quot;icon&quot; &#x2F;&gt;
+    </samp>
+    <footer><p>Also known as:
+      <ul>
+        <li><code>favicon</code></li>
+      </ul>
+    </footer>
+  </section>
+</section>
+  </article>
+  
+  
+  <footer>
+      <p>&copy; 2013 See the LICENCE file for more.</p>
+  </footer>
+</body>
+</html>
