@@ -38,7 +38,7 @@ RSpec.configure do |config|
   config.include Rack::Test::Accepts, :type => :request
 
   config.before(:each, :time_sensitive => true) do
-    Timecop.freeze Time.now
+    Timecop.freeze Time.at 1367612251
   end
 
   config.before(:each, :time_sensitive => true) do
