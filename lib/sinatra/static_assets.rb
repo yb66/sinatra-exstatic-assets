@@ -83,8 +83,10 @@ module Sinatra
       private
       def sss_url_for(addr, options=nil)
         options ||= {}
-        absolute = options.fetch :absolute, false
-        script_tag = options.fetch :script_tag, true
+        absolute = options.delete :absolute
+        absolute = false if absolute.nil?
+        script_tag = options.delete(:script_tag)
+        script_tag = true if script_tag.nil?
         href = uri addr, absolute, script_tag
         addr.respond_to?(:querystring) ?
           "#{href}#{addr.querystring}" :
@@ -101,7 +103,7 @@ module Sinatra
       def sss_stylesheet_tag(source, options = {})
         asset_dir = options.delete(:asset_dir) || settings.public_folder
         asset = Asset.new source, asset_dir
-        href = sss_url_for( asset )
+        href = sss_url_for( asset, options.delete(:url_options) )
         Tag.new "link", DEFAULT_CSS.merge(:href => href)
                                    .merge(options)
       end
@@ -113,7 +115,7 @@ module Sinatra
 
       def sss_javascript_tag(source, options = {})
         asset = Asset.new source, settings.public_folder
-        href = sss_url_for asset 
+        href = sss_url_for asset, options.delete(:url_options)
         Tag.new("script", DEFAULT_JS.merge(:src => href)
                                             .merge(options)          
         ) {}
@@ -134,7 +136,7 @@ module Sinatra
       # The default value of +closed+ option is +false+.
       #
       def sss_image_tag(source, options = {})
-        options[:src] = sss_url_for Asset.new( source, settings.public_folder )
+        options[:src] = sss_url_for Asset.new( source, settings.public_folder ), options.delete(:url_options)
         Tag.new "img", options
       end
 
