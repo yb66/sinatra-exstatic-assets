@@ -162,7 +162,11 @@ module Sinatra
       alias_method :javascript_include_tag, :javascript_tag
       alias_method :js_tag, :javascript_tag
       alias_method :script_tag, :javascript_tag
-      
+
+      # @param [String] source
+      # @param [Hash] options
+      # @option options [Hash] :url_options
+      # @option url_options [TrueClass] :script_tag
       def favicon_tag(*args)
         source, options = sss_extract_options args
         source = "favicon.ico" if source.nil? or source.empty?
