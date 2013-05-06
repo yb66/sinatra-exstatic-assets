@@ -12,9 +12,10 @@ rel="bookmark">Usage</a>
   <code>require 'sinatra/static_assets'</code>
 </section>
 <section>
-<section>
   <header><h2>The helpers</h2></header>
-  <p>Use these helpers in your views.<p>
+  <p>Use these helpers in your views.</p>
+  <p>To add an attribute to a helper, pass it as an option, e.g. <code>width: "500"</code></p>
+  <p>Sometimes, you won't want the script tag (e.g. "/app2") prepended to the url, like in the case of a favicon. In that case you can pass in <code>url_options: {script_tag: false}</code> to the helper, e.g. <code>favicon_tag url_options: {script_tag: false}</code></p>
   <section id='stylesheet_tag'>
     <header>
         <h3>stylesheet_tag</h3>
@@ -44,6 +45,13 @@ rel="bookmark">Usage</a>
     <samp>
       <%= Rack::Utils.escape_html( javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js") %>
     </samp>
+    <p>The code:
+    </p>
+    <code>javascript_tag "/js/helpers.js"</code>
+    <p>Output:</p>
+    <samp>
+      <%= Rack::Utils.escape_html( javascript_tag "/js/helpers.js" ) %>
+    </samp>
     <footer><p>Also known as:
       <ul>
         <li><code>javascript_include_tag</code></li>
@@ -58,14 +66,22 @@ rel="bookmark">Usage</a>
     </header>
     <p>The code:
     </p>
-    <code>image_tag "http://farm3.staticflickr.com/2474/3609420787_f7fc0e53c7.jpg", width: "500", height: "375", alt: "Magic Ball"</code>
+    <code>image_tag "http://farm1.staticflickr.com/10/12470738_fc0212bf8c.jpg", width: "500", height: "375", alt: "Greased Lightning"</code>
     <p>Output:</p>
     <samp>
-      <%= Rack::Utils.escape_html( image_tag "http://farm3.staticflickr.com/2474/3609420787_f7fc0e53c7.jpg", width: "500", height: "375", alt: "Magic Ball" ) %>
+      <%= Rack::Utils.escape_html( image_tag "http://farm1.staticflickr.com/10/12470738_fc0212bf8c.jpg", width: "500", height: "375", alt: "Greased Lightning" ) %>
+    </samp>
+    <p>The code:
+    </p>
+    <code>image_tag "/images/turnip.jpg", width: "500", height: "375", alt: "Turnip"</code>
+    <p>Output:</p>
+    <samp>
+      <%= Rack::Utils.escape_html( image_tag "/images/turnip.jpg", width: "500", height: "375", alt: "Turnip" ) %>
     </samp>
     <footer><p>Also known as:
       <ul>
         <li><code>img_tag</code></li>
+        <li><code>img</code></li>
       </ul>
     </footer>
   </section>
@@ -78,7 +94,7 @@ rel="bookmark">Usage</a>
     <code>favicon_tag</code>
     <p>Output:</p>
     <samp>
-      <%= Rack::Utils.escape_html( favicon_tag ) %>
+      <%= Rack::Utils.escape_html( favicon_tag url_options: {script_tag: false} ) %>
     </samp>
     <footer><p>Also known as:
       <ul>
