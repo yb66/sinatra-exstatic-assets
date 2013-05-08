@@ -3,7 +3,7 @@ require 'sinatra/base'
 # @see https://sinatrarb.com/intro The framework
 module Sinatra
 
-  # A Sinatra extension for helping with static assets.
+  # A Sinatra extension for helping with static assets. You probably want to start with {Helpers}.
   module StaticAssets
 
     # For creating HTML tags.
@@ -276,6 +276,7 @@ module Sinatra
       end
 
       alias_method :link_favicon_tag, :favicon_tag
+      alias_method :favicon, :favicon_tag
 
     end
 
