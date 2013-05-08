@@ -17,7 +17,13 @@ group :test do
 end
 
 group :development do
+  gem "rake"
   gem "wirble"
   gem "reek"
   gem 'webrick', '~> 1.3.1' # get rid of stupid warnings.
+end
+
+group :documentation do
+  gem "yard"
+  gem "maruku"
 end
