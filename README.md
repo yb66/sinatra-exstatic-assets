@@ -1,204 +1,69 @@
-# Sinatra Extension: StaticAssets
+## Sinatra Static Assets ##
 
-Gem *sinatra-static-assets* implements the following helpers methods:
+This is a fork/reworking of [wbzyl](https://github.com/wbzyl/sinatra-static-assets)'s library. I had many of the same requirements that the original library catered for, but some different ones too, and the beauty of open source code is you get to scratch your own itch! Many thanks to the contributors to that library for all their hard work and sharing the code.
 
-* `image_tag`
-* `stylesheet_link_tag`
-* `javascript_script_tag`
-* `link_to`
-* `link_favicon_tag`
+### What does it do? ###
 
-To install it, run:
+It's a Sinatra extension that has some handy helpers for dealing with static assets, like stylesheets and images, in your views.
 
-    sudo gem install sinatra-static-assets -s http://gemcutter.org
+### What's different from the other library? ###
 
-All these methods are simple wrappers around the `uri` method
-from the [sinatra](http://github.com/sinatra/sinatra) gem.
+* There's no `link_to` method (it doesn't handle assets so it was cut).
+* There was a mutex in the library to handle timestamps and race conditions around that. That's gone.
+* The helpers now look at the timestamp for the file they're linking to, and add that as a querystring parameter to the link displayed in the view. This will help client browsers cache the file (add something like Rack Cache to aid with this).
+* There are some new options to give more control over whether the script_tag environment variable is prepended.
+* More aliases, and shorter aliases.
+* The tests are now a mixture of integration and unit test, but written using RSpec. There's also test coverage via SimpleCov, which is close to 100%.
+* More API docs via Yardoc.
 
-## When will you need it?
+### Installation ###
 
-Whenever you use the
-[Passenger module for Apache2](http://www.modrails.com/documentation/Users%20guide%20Apache.html#deploying_rack_to_sub_uri)
-or use `Rack::URLMap` to dispatch an application to
-sub URI.
+Via Rubygems:
 
-Example: Suppose that we already have a virtual host `hitch.local`
-and two Sinatra applications that live in
-`/home/me/www/summer` and `/home/me/www/winter`
-directories, respectively.
-We want our Sinatra applications to be accessible from
-the following sub URI:
+    gem install "sinatra-static-assets"
 
-    http://hitch.local/summer
+Via Bundler, put this in your Gemfile:
 
-and
+    gem "sinatra-static-assets", :require => "sinatra/static-assets"
 
-    http://hitch.local/winter
+### Usage ###
 
-To configure Apache2 and Passenger to serve our applications
-we need to create a new configuration file with the following content:
+Here's a quick example, but there are more in the `examples` directory:
 
-    <VirtualHost *:80>
-      ServerName hitch.local
-      DocumentRoot /srv/www/hitch.local
-
-      RackBaseURI /summer
-      RackBaseURI /winter
-    </VirtualHost>
-
-and a link to the applications directories in `/srv/www/hitch.local`:
-
-    ln -s /home/me/www/summer/public /srv/www/hitch.local/summer
-    ln -s /home/me/www/winter/public /srv/www/hitch.local/winter
-
-After restarting an Apache2 server and visiting, for example, the first
-application at `http://hitch.local/summer` we see that links to
-images, stylesheets and javascripts are broken.
-
-The hitch here is that in Sinatra applications we usually refer to
-images/stylesheets/javascripts with absolute URI:
-
-    /images/tatry1.jpg    /stylesheets/app.css    /javascripts/app.js
-
-That setup **works** whenever we are running applications locally.
-The absolute URI above tells a browser to request images
-(stylesheets and javascripts) from:
-
-    http://localhost:4567/images/tatry1.jpg
-
-which in turn, tells a server to send a file:
-
-    /home/me/www/summer/public/images/tatry1.jpg
-
-The `public` directory is the default directory where static files
-should be served from.
-So, the `/images/tatry1.jpg` picture will be there and will be served
-unless we had changed that default directory.
-
-But these absolute URIs do not work when, for example,
-the *summer* application is dispatched to `/summer` sub URI.
-As a result the images are at:
-
-    http://hitch.local/summer/images/tatry1.jpg
-
-but we request them from:
-
-    http://hitch.local/images/tatry1.jpg
-
-And this **does not work** because there is no application
-dispatched to *images* sub URI.
-
-The recommended way to deal with an absolute URI
-is to use a helper method that automatically converts
-`/images/tatry1.jpg` to `/summer/images/tatry1.jpg`
-for application dispatched to `/summer` sub URI.
-
-In the above example you can simply remove the `<img>`
-HTML tag and replace it with a Ruby inline code like this:
-
-    <%= image_tag("/images/tatry1.jpg", :alt => "Błyszcz, 2159 m") %>
-
-See also, [How to fix broken images/CSS/JavaScript URIs in sub-URI
-deployments](http://www.modrails.com/documentation/Users%20guide%20Apache.html#sub_uri_deployment_uri_fix)
-
-## Usage examples
-
-In HTML (and HTML5) `<link>` and `<img>` tags have no end tag.
-In XHTML, on the contrary, these tags must be properly closed.
-
-We can choose the appropriate behaviour with *closed* option:
-
-    image_tag "/images/tatry1.jpg", :alt => "Błyszcz, 2159 m", :closed => true
-
-The default value of *closed* option is `false`. We can change the default value with:
-
-    enable :xhtml
-
-We can pass mutliple stylesheets or scripts:
-
-    stylesheet_link_tag "/stylesheets/screen.css", "/stylesheets/summer.css", :media => "projection"
-    javascript_script_tag "/javascripts/jquery.js", "/javascripts/summer.js", :charset => "iso-8859-2"
-    link_to "Tatry Mountains Rescue Team", "/topr"
-
-In order to use include the following in a Sinatra application:
-
-    require 'sinatra/static_assets'
-
-Or, if subclassing `Sinatra::Base`, include helpers manually:
-
-    require 'sinatra/static_assets'
-
-    class Summer < Sinatra::Base
-      register Sinatra::StaticAssets
-      # ...
+    require 'sinatra'
+    require 'haml' # the lib doesn't rely on Haml, it's engine agnostic:)
+    require 'sinatra/static-assets'
+    
+    get "/" do
+      haml :index
     end
+    
+    @@ layout
+    !!!
+    %title Example
+    = favicon
+    = css_tag "/css/screen.css"
+    = js_tag "/js/helpers.js"
+    = js_tag "http://code.jquery.com/jquery-1.9.1.min.js" 
+    %body
+      = yield
+    
+    @@ index
+    %dt
+      %dd This is an interesting photo
+      %dl
+        %a{ href: "http://www.flickr.com/photos/redfernneil/1317915651/" }
+          = img "http://www.flickr.com/photos/redfernneil/1317915651/" width: 500, height: 250, alt: "Something about the photo"
 
-## Dispatching reusable Sinatra applications
+There is also more detailed documentation on each helper in the {Sinatra::Static::Helpers} API docs.
 
-With the latest version of Sinatra it is possible to build
-reusable Sinatra applications. This means that multiple Sinatra applications
-can be run in isolation and co-exist peacefully with other Rack
-based applications. Subclassing `Sinatra::Base` creates such a
-reusable application.
+### TODO ###
 
-The `example` directory contains two reusable Sinatra applications:
-*rsummer*, *rwinter* and a rackup file `rconfig.ru` which
-dispatches these applications to `/summer` and `/winter` sub URI:
+* Make it easy to pass in caching options.
+* Default dirs set up for things like /css, /images etc.
+* An image link tag.
+* Caching of the timestamps (but I'm not sure it's needed or worth it).
 
-    $LOAD_PATH.unshift('rsummer')
-    require 'summer'
+### Licence ###
 
-    $LOAD_PATH.unshift('rwinter')
-    require 'winter'
-
-    map '/summer' do
-      run Sinatra::Summer.new
-    end
-
-    map '/winter' do
-      run Sinatra::Winter.new
-    end
-
-Run `rconfig.ru` file with:
-
-    rackup -p 3000 rconfig.ru
-
-This file could **also** be used to deploy to virtual host's root with
-Passenger.
-
-To this end, create an Apache2 configuration file with the following
-content:
-
-    <VirtualHost *:80>
-        ServerName hitch.local
-        DocumentRoot /srv/www/hitch.local
-    </VirtualHost>
-
-Next, create directories required by Passenger:
-
-    mkdir /srv/www/hitch.local/{public,tmp}
-
-and, finally, copy `config.ru` into `/srv/www/hitch.local` and
-update `LOAD_PATH` in the copied file.
-
-With everything in place, after restarting Apache2,
-the applications are accessible from the
-
-    http://hitch.local/summer
-
-and
-
-    http://hitch.local/winter
-
-respectively.
-
-## Miscellaneous stuff
-
-1\. The `examples` directory contains *summer* and *winter* applications.
-
-2\. In order to create a virual host add the following to */etc/hosts/*:
-
-    127.0.0.1       localhost.localdomain localhost hitch.local
-
-or, read [editing /etc/hosts is waste of my
-time](http://www.taylorluk.com/articles/2009/08/12/hey-pac-man-sup-subdomains).
+See the LICENCE file.
