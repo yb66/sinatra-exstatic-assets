@@ -1,5 +1,6 @@
 require 'sinatra/base'
 
+# @see https://sinatrarb.com/intro The framework
 module Sinatra
 
   # A Sinatra extension for helping with static assets.
@@ -7,7 +8,6 @@ module Sinatra
 
     # For creating HTML tags.
     class Tag < ::String
-      DEFAULT_OPTIONS = {}
 
       # @param [String] name The tag name e.g. `link`.
       # @param [Hash] options With the exception of any options listed here, these are passed to the tag to make the HTML attributes.
@@ -19,7 +19,7 @@ module Sinatra
       def initialize( name, options={}, &block )
         @name       = name
         @closed = (c = options.delete(:closed)).nil? ? true : c
-        @options    = DEFAULT_OPTIONS.merge options
+        @options    = options
         @attributes = self.class.make_attributes @options
         @block      = block
         super tag
@@ -279,6 +279,7 @@ module Sinatra
 
     end
 
+    # Extending
     def self.registered(app)
       app.helpers StaticAssets::Helpers
       app.disable :xhtml
