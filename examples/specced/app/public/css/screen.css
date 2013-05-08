@@ -1,0 +1,8 @@
+* {
+    font-family: 'Titillium Web', sans-serif;
+}
+
+header[role=banner] h1 {
+    font-family: 'Faster One', sans-serif;
+    font-size: 46px; margin: 0px;
+}

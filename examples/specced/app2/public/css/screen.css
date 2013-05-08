@@ -1,0 +1,8 @@
+* {
+    font-family: 'Quicksand', sans-serif;
+}
+
+header[role=banner] h1 {
+    font-family: 'Cherry Swash', cursive;
+    font-size: 46px; margin: 0px;
+}

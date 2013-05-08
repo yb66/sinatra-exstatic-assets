@@ -1,0 +1,93 @@
+body {
+    width: 480px; margin: 0px 30px;
+}
+
+
+header[role=banner] h2 {
+    font-size: 18px; margin: 0px; color: #888;
+    font-style: italic;
+}
+
+ul { list-style-type: none }
+
+nav ul {
+    list-style: none; padding: 0px; display: block;
+    clear: right; background-color: #888;
+    padding-left: 4px; height: 24px;
+}
+
+nav ul li {
+    display: inline; padding: 0px 20px 5px 10px;
+    height: 24px; border-right: 1px solid #ccc;
+}
+
+nav ul li a {
+    color: #993333; text-decoration: none;
+    font-size: 13px; font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #fff;
+}
+
+article > header time {
+    font-size: 14px; display: block; width: 26px;
+    padding: 2px; text-align: center; background-color: #993333;
+    color: #fff; font-weight: bold; -moz-border-radius: 6px;
+    -webkit-border-radius: 6px; border-radius: 6px; float: left;
+    margin-bottom: 10px;
+}
+
+article > header time span {
+    font-size: 10px; font-weight: normal;
+    text-transform: uppercase;
+}
+
+article > header h1 {
+    font-size: 30px; float: left;
+    margin:0;
+    margin-left: 14px;
+    text-shadow: 2px 2px 5px #333;
+}
+
+article > header h1 a {
+    color: #993333;
+}
+
+section > header h3 {
+  border-bottom: 1px dotted;
+  border-left: 1px dotted;
+  padding-left: 5px;
+}
+
+article > section {
+  margin-top: 30px;
+}
+article section section{
+  margin-bottom: 40px;
+}
+
+article > section header h1 {
+    font-size: 16px;
+}
+
+article p {
+    clear: both;
+}
+
+footer p {
+    text-align: center; font-size: 12px;
+    color: #888; margin-top: 24px;
+}
+
+code {
+  background: #E6E6E6;
+  border: 1px solid #D8D8D8;
+  display: block;
+  margin-bottom: 10px;
+}
+
+samp {
+  background: #F5F6CE;
+  display: block;
+}

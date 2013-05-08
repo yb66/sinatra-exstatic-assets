@@ -1,0 +1,90 @@
+<header>
+    <h1>
+        <a href="#" title="Link to this post" 
+rel="bookmark">Usage</a>
+    </h1>
+</header>
+<p>Note that there is a Main App and an App2. This is to demonstrate that you can give links relative to the app, but if they are mounted with an extra prefix (using Rack#map, for example) the helper will respect that and produce the right href attribute.</p>
+<section><header><h2>Installation and loading</h2></header>
+  <p>Start by installing:</p>
+  <code>gem 'sinatra-static-assets'</code>
+  <p>Then require it in your Sinatra app.</p>
+  <code>require 'sinatra/static_assets'</code>
+</section>
+<section>
+<section>
+  <header><h2>The helpers</h2></header>
+  <p>Use these helpers in your views.<p>
+  <section id='stylesheet_tag'>
+    <header>
+        <h3>stylesheet_tag</h3>
+    </header>
+    <p>The code:
+    </p>
+    <code>stylesheet_tag "/css/screen.css"</code>
+    <p>Output:</p>
+    <samp>
+      <%= Rack::Utils.escape_html( stylesheet_tag "/css/screen.css") %>
+    </samp>
+    <footer><p>Also known as:
+      <ul>
+        <li><code>css_tag</code></li>
+        <li><code>stylesheet</code></li>
+      </ul>
+    </footer>
+  </section>
+  <section id='javascript_tag'>
+    <header>
+      <h3>javascript_tag</h3>
+    </header>
+    <p>The code:
+    </p>
+    <code>javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js"</code>
+    <p>Output:</p>
+    <samp>
+      <%= Rack::Utils.escape_html( javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js") %>
+    </samp>
+    <footer><p>Also known as:
+      <ul>
+        <li><code>javascript_include_tag</code></li>
+        <li><code>js_tag</code></li>
+        <li><code>script_tag</code></li>
+      </ul> 
+    </footer>
+  </section>
+  <section id='image_tag'>
+    <header>
+      <h3>image_tag</h3>
+    </header>
+    <p>The code:
+    </p>
+    <code>image_tag "http://farm3.staticflickr.com/2474/3609420787_f7fc0e53c7.jpg", width: "500", height: "375", alt: "Magic Ball"</code>
+    <p>Output:</p>
+    <samp>
+      <%= Rack::Utils.escape_html( image_tag "http://farm3.staticflickr.com/2474/3609420787_f7fc0e53c7.jpg", width: "500", height: "375", alt: "Magic Ball" ) %>
+    </samp>
+    <footer><p>Also known as:
+      <ul>
+        <li><code>img_tag</code></li>
+        <li><code>img</code></li>
+      </ul>
+    </footer>
+  </section>
+  <section id='favicon_tag'>
+    <header>
+      <h3>favicon_tag</h3>
+    </header>
+    <p>The code:
+    </p>
+    <code>favicon_tag</code>
+    <p>Output:</p>
+    <samp>
+      <%= Rack::Utils.escape_html( favicon_tag ) %>
+    </samp>
+    <footer><p>Also known as:
+      <ul>
+        <li><code>favicon</code></li>
+      </ul>
+    </footer>
+  </section>
+</section>
