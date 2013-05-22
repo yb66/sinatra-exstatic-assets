@@ -20,6 +20,7 @@ end
 
 namespace :examples do
 
+  desc "Run the examples."
   task :run do
     exec "bundle exec rackup examples/config.ru"
   end
