@@ -17,3 +17,11 @@ namespace :docs do
   end
 
 end
+
+namespace :examples do
+
+  task :run do
+    exec "bundle exec rackup examples/config.ru"
+  end
+
+end
