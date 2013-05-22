@@ -5,8 +5,8 @@
 	<title>Example</title>
 	<link href="/favicon.ico" rel="icon" />
 	<link charset="utf-8" href="http://fonts.googleapis.com/css?family=Quicksand|Faster+One|Cherry+Swash:700|Titillium+Web" media="screen" rel="stylesheet" type="text/css" />
-	<link charset="utf-8" href="/css/base.css?ts=1367750338" media="screen" rel="stylesheet" />
-	<link charset="utf-8" href="/css/screen.css?ts=1367678587" media="screen" rel="stylesheet" />
+	<link charset="utf-8" href="/css/base.css?ts=1368017668" media="screen" rel="stylesheet" />
+	<link charset="utf-8" href="/css/screen.css?ts=1368017668" media="screen" rel="stylesheet" />
 	<script charset="utf-8" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	
 </head>
@@ -55,7 +55,7 @@ rel="bookmark">Usage</a>
     <code>stylesheet_tag "/css/screen.css"</code>
     <p>Output:</p>
     <samp>
-      &lt;link charset=&quot;utf-8&quot; href=&quot;&#x2F;css&#x2F;screen.css?ts=1367678587&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; &#x2F;&gt;
+      &lt;link charset=&quot;utf-8&quot; href=&quot;&#x2F;css&#x2F;screen.css?ts=1368017668&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; &#x2F;&gt;
     </samp>
     <footer><p>Also known as:
       <ul>
