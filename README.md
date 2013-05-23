@@ -28,7 +28,7 @@ Here's a quick example, but there are more in the `examples` directory:
 
     require 'sinatra'
     require 'haml' # the lib doesn't rely on Haml, it's engine agnostic:)
-    require 'sinatra/static_assets'
+    require 'sinatra/exstatic_assets'
     
     get "/" do
       haml :index
@@ -51,7 +51,7 @@ Here's a quick example, but there are more in the `examples` directory:
         %a{ href: "http://www.flickr.com/photos/redfernneil/1317915651/" }
           = img "http://www.flickr.com/photos/redfernneil/1317915651/" width: 500, height: 250, alt: "Something about the photo"
 
-There is also more detailed documentation on each helper in the {Sinatra::Static::Helpers} API docs.
+There is also more detailed documentation on each helper in the {Sinatra::Exstatic::Helpers} API docs.
 
 ### TODO ###
 
