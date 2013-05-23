@@ -20,7 +20,7 @@ It's a Sinatra extension that has some handy helpers for dealing with static ass
 
 Via Bundler, put this in your Gemfile:
 
-    gem "sinatra-static-assets", :require => "sinatra/exstatic_assets", :git => "https://github.com/yb66/sinatra-exstatic-assets.git", :branch => "develop"
+    gem "sinatra-exstatic-assets", :require => "sinatra/exstatic_assets", :git => "https://github.com/yb66/sinatra-exstatic-assets.git", :branch => "develop"
 
 ### Usage ###
 
