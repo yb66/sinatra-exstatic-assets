@@ -1,4 +1,4 @@
-## Sinatra Static Assets ##
+## Sinatra Exstatic Assets ##
 
 This is a fork/reworking of [wbzyl](https://github.com/wbzyl/sinatra-static-assets)'s library. I had many of the same requirements that the original library catered for, but some different ones too, and the beauty of open source code is you get to scratch your own itch! Many thanks to the contributors to that library for all their hard work and sharing the code.
 
@@ -18,13 +18,9 @@ It's a Sinatra extension that has some handy helpers for dealing with static ass
 
 ### Installation ###
 
-Via Rubygems:
-
-    gem install "sinatra-static-assets"
-
 Via Bundler, put this in your Gemfile:
 
-    gem "sinatra-static-assets", :require => "sinatra/static-assets"
+    gem "sinatra-static-assets", :require => "sinatra/exstatic_assets", :git => "https://github.com/yb66/sinatra-exstatic-assets.git", :branch => "develop"
 
 ### Usage ###
 
@@ -32,7 +28,7 @@ Here's a quick example, but there are more in the `examples` directory:
 
     require 'sinatra'
     require 'haml' # the lib doesn't rely on Haml, it's engine agnostic:)
-    require 'sinatra/static-assets'
+    require 'sinatra/static_assets'
     
     get "/" do
       haml :index
