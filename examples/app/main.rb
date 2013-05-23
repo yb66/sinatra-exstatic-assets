@@ -1,9 +1,9 @@
 require 'sinatra/base'
-require 'sinatra/static_assets'
+require 'sinatra/exstatic_assets'
 
 module Example
   class App < Sinatra::Base
-    register Sinatra::StaticAssets
+    register Sinatra::Exstatic
 
     get "/" do
       erb :index

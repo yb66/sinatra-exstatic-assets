@@ -1,8 +1,8 @@
 require 'spec_helper'
-require_relative "../lib/sinatra/static_assets.rb"
+require_relative "../lib/sinatra/exstatic_assets.rb"
 
 module Sinatra
-module StaticAssets
+module Exstatic
 
 describe Asset, :time_sensitive do
   let(:asset_dir) { "app/public" }
@@ -67,7 +67,7 @@ end
 
 
 class FakeObject
-  include Sinatra::StaticAssets::Private
+  include Sinatra::Exstatic::Private
   def uri( addr, absolute, script_tag )
     script_tag ? File.join( ENV["SCRIPT_NAME"], addr) : addr
   end
@@ -120,14 +120,14 @@ describe "Private methods", :time_sensitive do
   end
 end
 
-end # StaticAssets
+end # Exstatic
 end # Sinatra
 
 describe "Using them with a Sinatra app", :time_sensitive do
   include_context "All routes"
   let(:expected) { File.read File.expand_path(fixture_file, File.dirname(__FILE__)) }
   before do
-    # Sinatra::StaticAssets::Asset.any_instance.stub(:timestamp).and_return(Time.now.to_i)
+    # Sinatra::ExstaticAssets::Asset.any_instance.stub(:timestamp).and_return(Time.now.to_i)
   end
   context "Main" do
     let(:fixture_file) { "./support/fixtures/main.txt" }
