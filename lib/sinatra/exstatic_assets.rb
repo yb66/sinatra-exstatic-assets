@@ -4,7 +4,7 @@ require 'sinatra/base'
 module Sinatra
 
   # A Sinatra extension for helping with static assets. You probably want to start with {Helpers}.
-  module StaticAssets
+  module Exstatic
 
     # For creating HTML tags.
     class Tag < ::String
@@ -196,15 +196,15 @@ module Sinatra
     # These are the helpers available to a Sinatra app using the extension.
     # @example
     #   # For a classic app
-    #   require 'sinatra/static_assets'
+    #   require 'sinatra/exstatic'
     #   # That's all for a classic app, the helpers
     #   # are now available.
     #
     #   # For a modular app
     #   require 'sinatra/base'
-    #   require 'sinatra/static_assets'
+    #   require 'sinatra/exstatic'
     #   class MyApp < Sinatra::Base
-    #     helpers Sinatra::StaticAssets
+    #     helpers Sinatra::Exstatic
     module Helpers
       include Private
 
@@ -282,10 +282,10 @@ module Sinatra
 
     # Extending
     def self.registered(app)
-      app.helpers StaticAssets::Helpers
+      app.helpers Exstatic::Helpers
       app.disable :xhtml
     end
   end
 
-  register StaticAssets
+  register Exstatic
 end
