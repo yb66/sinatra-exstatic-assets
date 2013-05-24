@@ -17,6 +17,7 @@ group :test do
 end
 
 group :development do
+  gem 'json', '~> 1.7.7'
   gem "rake"
   gem "wirble"
   gem "reek"

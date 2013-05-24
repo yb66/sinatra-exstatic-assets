@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-config_path = File.expand_path '../../../examples/specced/config.rb', File.dirname(__FILE__)
+config_path = File.expand_path '../../../examples/config.rb', File.dirname(__FILE__)
 require_relative config_path
 
 shared_context "All routes" do

@@ -5,8 +5,8 @@
 	<title>Example</title>
 	<link href="/favicon.ico" rel="icon" />
 	<link charset="utf-8" href="http://fonts.googleapis.com/css?family=Quicksand|Faster+One|Cherry+Swash:700|Titillium+Web" media="screen" rel="stylesheet" type="text/css" />
-	<link charset="utf-8" href="/app2/css/base.css?ts=1367750324" media="screen" rel="stylesheet" />
-	<link charset="utf-8" href="/app2/css/screen.css?ts=1367678587" media="screen" rel="stylesheet" />
+	<link charset="utf-8" href="/app2/css/base.css?ts=1368017668" media="screen" rel="stylesheet" />
+	<link charset="utf-8" href="/app2/css/screen.css?ts=1368017668" media="screen" rel="stylesheet" />
 	<script charset="utf-8" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	
 </head>
@@ -15,7 +15,7 @@
   <header role='banner'>
   <a href="http://www.flickr.com/photos/tjt195/12470738/" title="Greased Lightning by tarotastic, on Flickr"><img alt="Greased Lightning" height="375" src="http://farm1.staticflickr.com/10/12470738_fc0212bf8c.jpg" width="500" /></a>
       <hgroup>
-          <h1>Sinatra Static Assets</h1>
+          <h1>Sinatra Exstatic Assets</h1>
           <h2>Helpers for your JS, CSS and anything static</h2>
       </hgroup>
   </header>
@@ -24,8 +24,8 @@
       <ul>
           <li><a href="/">Main app</a></li>
           <li><a href="/app2">App 2</a></li>
-          <li><a href="https://rubygems.org/gems/sinatra-static-assets">Rubygems</a></li>
-          <li><a href="https://github.com/wbzyl/sinatra-static-assets">Source code</a></li>
+          <li><a href="https://rubygems.org/gems/sinatra-exstatic-assets">Rubygems</a></li>
+          <li><a href="https://github.com/yb66/sinatra-exstatic-assets">Source code</a></li>
       </ul>
   </nav>
   <article>
@@ -38,9 +38,9 @@ rel="bookmark">Usage</a>
 <p>Note that there is a Main App and an App2. This is to demonstrate that you can give links relative to the app, but if they are mounted with an extra prefix (using Rack#map, for example) the helper will respect that and produce the right href attribute.</p>
 <section><header><h2>Installation and loading</h2></header>
   <p>Start by installing:</p>
-  <code>gem 'sinatra-static-assets'</code>
+  <code>gem 'sinatra-exstatic-assets'</code>
   <p>Then require it in your Sinatra app.</p>
-  <code>require 'sinatra/static_assets'</code>
+  <code>require 'sinatra/exstatic_assets'</code>
 </section>
 <section>
   <header><h2>The helpers</h2></header>
@@ -56,7 +56,7 @@ rel="bookmark">Usage</a>
     <code>stylesheet_tag "/css/screen.css"</code>
     <p>Output:</p>
     <samp>
-      &lt;link charset=&quot;utf-8&quot; href=&quot;&#x2F;app2&#x2F;css&#x2F;screen.css?ts=1367678587&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; &#x2F;&gt;
+      &lt;link charset=&quot;utf-8&quot; href=&quot;&#x2F;app2&#x2F;css&#x2F;screen.css?ts=1368017668&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; &#x2F;&gt;
     </samp>
     <footer><p>Also known as:
       <ul>
