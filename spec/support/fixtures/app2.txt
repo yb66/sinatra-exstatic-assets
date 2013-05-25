@@ -5,8 +5,8 @@
 	<title>Example</title>
 	<link href="/favicon.ico" rel="icon" />
 	<link charset="utf-8" href="http://fonts.googleapis.com/css?family=Quicksand|Faster+One|Cherry+Swash:700|Titillium+Web" media="screen" rel="stylesheet" type="text/css" />
-	<link charset="utf-8" href="/app2/css/base.css?ts=1368017668" media="screen" rel="stylesheet" />
-	<link charset="utf-8" href="/app2/css/screen.css?ts=1368017668" media="screen" rel="stylesheet" />
+	<link charset="utf-8" href="/app2/css/base.css?ts=1367612251" media="screen" rel="stylesheet" />
+	<link charset="utf-8" href="/app2/css/screen.css?ts=1367612251" media="screen" rel="stylesheet" />
 	<script charset="utf-8" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	
 </head>
@@ -56,7 +56,7 @@ rel="bookmark">Usage</a>
     <code>stylesheet_tag "/css/screen.css"</code>
     <p>Output:</p>
     <samp>
-      &lt;link charset=&quot;utf-8&quot; href=&quot;&#x2F;app2&#x2F;css&#x2F;screen.css?ts=1368017668&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; &#x2F;&gt;
+      &lt;link charset=&quot;utf-8&quot; href=&quot;&#x2F;app2&#x2F;css&#x2F;screen.css?ts=1367612251&quot; media=&quot;screen&quot; rel=&quot;stylesheet&quot; &#x2F;&gt;
     </samp>
     <footer><p>Also known as:
       <ul>
@@ -81,7 +81,7 @@ rel="bookmark">Usage</a>
     <code>javascript_tag "/js/helpers.js"</code>
     <p>Output:</p>
     <samp>
-      &lt;script charset=&quot;utf-8&quot; src=&quot;&#x2F;app2&#x2F;js&#x2F;helpers.js&quot;&gt;&lt;&#x2F;script&gt;
+      &lt;script charset=&quot;utf-8&quot; src=&quot;&#x2F;app2&#x2F;js&#x2F;helpers.js?ts=1367612251&quot;&gt;&lt;&#x2F;script&gt;
     </samp>
     <footer><p>Also known as:
       <ul>
@@ -107,7 +107,7 @@ rel="bookmark">Usage</a>
     <code>image_tag "/images/turnip.jpg", width: "500", height: "375", alt: "Turnip"</code>
     <p>Output:</p>
     <samp>
-      &lt;img alt=&quot;Turnip&quot; height=&quot;375&quot; src=&quot;&#x2F;app2&#x2F;images&#x2F;turnip.jpg&quot; width=&quot;500&quot; &#x2F;&gt;
+      &lt;img alt=&quot;Turnip&quot; height=&quot;375&quot; src=&quot;&#x2F;app2&#x2F;images&#x2F;turnip.jpg?ts=1367612251&quot; width=&quot;500&quot; &#x2F;&gt;
     </samp>
     <footer><p>Also known as:
       <ul>
