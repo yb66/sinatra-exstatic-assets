@@ -127,7 +127,13 @@ describe "Using them with a Sinatra app", :time_sensitive do
   include_context "All routes"
   let(:expected) { File.read File.expand_path(fixture_file, File.dirname(__FILE__)) }
   before do
-    # Sinatra::ExstaticAssets::Asset.any_instance.stub(:timestamp).and_return(Time.now.to_i)
+    Sinatra::Exstatic::Asset.any_instance
+                                  .stub(:exists?)
+                                  .and_return(true)
+
+    Sinatra::Exstatic::Asset.any_instance
+                                  .stub(:mtime_int)
+                                  .and_return(1367612251)
   end
   context "Main" do
     let(:fixture_file) { "./support/fixtures/main.txt" }
