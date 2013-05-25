@@ -22,6 +22,11 @@ It's a Sinatra extension that has some handy helpers for dealing with static ass
 * The tests are now a mixture of integration and unit test, but written using RSpec. There's also test coverage via SimpleCov, which is close to 100%.
 * More API docs via Yardoc.
 
+### Version numbers ###
+
+This library uses [semver](http://semver.org/) to version the **library**. That means the library version is ***not*** an indicator of quality but a way to manage changes.
+
+
 ### Installation ###
 
 Via Bundler, put this in your Gemfile:
