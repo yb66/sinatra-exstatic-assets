@@ -76,9 +76,8 @@ module Sinatra
       # If the asset is a local file this gets the timestamp.
       # @return [Integer]
       def timestamp
-        @timestamp ||= !is_uri? && File.exists?(fullpath) && File.mtime(fullpath).to_i
+        @timestamp ||= !is_uri? && exists? && mtime_int
       end
-
 
       # Takes the timestamp and returns it as a querystring.
       # @return [String] `?ts=TIMESTAMP`
@@ -105,6 +104,20 @@ module Sinatra
       # @return [TrueClass]
       def is_uri?
         self =~ URI_PATTERN ? true : false
+      end
+
+
+      # Convenience, mainly for my convenience in stubbing during tests.
+      # @return [TrueClass]
+      def exists?
+        File.exists? fullpath
+      end
+
+
+      # Convenience, mainly for my convenience in stubbing during tests.
+      # @return [Int]
+      def mtime_int
+        File.mtime( fullpath ).to_i
       end
     end
 
