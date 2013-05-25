@@ -1,5 +1,11 @@
 ## Sinatra Exstatic Assets ##
 
+### Master branch build status ###
+
+[![Build Status](https://travis-ci.org/yb66/sinatra-exstatic-assets.png?branch=master)](https://travis-ci.org/yb66/sinatra-exstatic-assets)
+
+### Preamble ###
+
 This is a fork/reworking of [wbzyl](https://github.com/wbzyl/sinatra-static-assets)'s library. I had many of the same requirements that the original library catered for, but some different ones too, and the beauty of open source code is you get to scratch your own itch! Many thanks to the contributors to that library for all their hard work and sharing the code.
 
 ### What does it do? ###
