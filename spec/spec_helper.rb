@@ -29,10 +29,19 @@ Dir[ File.join( Spec_dir, "/support/**/*.rb")].each do |f|
 end
 
 require 'rack/test/accepts'
+require 'timecop'
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
 
   config.include Rack::Test::Accepts, :type => :request
+
+  config.before(:each, :time_sensitive => true) do
+    Timecop.freeze "2013-03-31 00:00:00 0000"
+  end
+
+  config.after(:each, :time_sensitive => true) do
+    Timecop.return
+  end
 end
 

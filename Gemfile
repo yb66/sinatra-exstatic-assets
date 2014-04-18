@@ -13,6 +13,7 @@ group :test do
   gem "simplecov"
   gem 'turn', :require => false
   gem "rack-test-accepts", :require => "rack/test/accepts"
+  gem "timecop"
 end
 
 group :development do
