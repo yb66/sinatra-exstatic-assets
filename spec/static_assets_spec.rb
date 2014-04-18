@@ -22,7 +22,8 @@ describe Asset, :time_sensitive do
     its(:"is_uri?") { should be_false }
     its(:querystring) { should == "?ts=#{Time.now.to_i}" }
   end
-  context "Given a url" do    let(:filename) { "http://code.jquery.com/jquery-1.9.1.min.js" }
+  context "Given a url" do
+    let(:filename) { "http://code.jquery.com/jquery-1.9.1.min.js" }
     let(:expected) { "http://code.jquery.com/jquery-1.9.1.min.js" }
     it { should_not be_nil }
     it { should == expected }
@@ -111,12 +112,25 @@ describe "Private methods", :time_sensitive do
     it { should == expected }
   end
   context "Images" do
-    let(:url) { "/images/foo.png" }
-    let(:filename) { "/images/foo.png" }
-    let(:expected) { %Q!<img src="/bar/images/foo.png?ts=#{time}" />! }
-    subject { o.send :sss_image_tag, url }
-    it { should_not be_nil }
-    it { should == expected }
+    context "Local" do
+      let(:url) { "/images/foo.png" }
+      let(:filename) { "/images/foo.png" }
+      let(:expected) { %Q!<img src="/bar/images/foo.png?ts=#{time}" />! }
+      subject { o.send :sss_image_tag, url }
+      it { should_not be_nil }
+      it { should == expected }
+    end
+    context "Remote" do
+      let(:url) { "http://example.org/images/foo.png" }
+      let(:filename) { "/images/foo.png" }
+      let(:expected) { %Q!<img src="#{url}" />! }
+      subject { 
+        o.send  :sss_image_tag,
+                url
+      }
+      it { should_not be_nil }
+      it { should == expected }
+    end
   end
 end
 
