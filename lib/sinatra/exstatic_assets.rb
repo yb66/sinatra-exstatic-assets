@@ -137,12 +137,13 @@ module Sinatra
       # @see Sinatra::Helpers#uri
       def sss_url_for(addr, options=nil)
         options ||= {}
-        absolute = options.delete :absolute
+        opts = {timestamp: true}.merge options
+        absolute = opts.delete :absolute
         absolute = false if absolute.nil?
-        script_tag = options.delete(:script_tag)
-        script_tag = true if script_tag.nil?
+        script_tag = opts.delete(:script_tag)
+        script_tag = true if script_tag.nil? unless addr.is_uri?
         href = uri addr, absolute, script_tag
-        addr.respond_to?(:querystring) ?
+        addr.respond_to?(:querystring) && opts[:timestamp] ?
           "#{href}#{addr.querystring}" :
           href
       end
@@ -193,7 +194,10 @@ module Sinatra
 
       # Make's sure the options don't get mixed up with the other args.
       def sss_extract_options(a)
-        opts = a.last.respond_to?(:keys) ? a.pop : {}
+        opts = a.last.respond_to?(:keys) ?
+          a.pop :
+          {}
+        opts ||= {}
         [a, opts]
       end
 
@@ -283,7 +287,8 @@ module Sinatra
         # xhtml style like <link rel="shortcut icon" href="http://example.com/myicon.ico" />
         options[:rel] ||= settings.xhtml ? "shortcut icon" : "icon"
 
-        options[:href] = sss_url_for(source, options.delete(:url_options))
+        url_options = options.delete(:url_options) || {}
+        options[:href] = sss_url_for(Asset.new(source), url_options.merge(timestamp: false))
         
         Tag.new "link", options
       end
