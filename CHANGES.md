@@ -1,5 +1,12 @@
 # CH CH CH CHANGES! #
 
+## Friday the 18th of April 2014, v2.0.1 ##
+
+* Bug fix, remote urls were sometimes being prepended with the public folder, fixed.
+
+----
+
+
 ## Saturday the 25th of May 2013, v2.0.0 ##
 
 * First release as the renamed library.
