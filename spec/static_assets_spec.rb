@@ -131,6 +131,17 @@ describe "Private methods", :time_sensitive do
       it { should_not be_nil }
       it { should == expected }
     end
+    context "Remote and secure" do
+      let(:url) { "https://example.org/images/foo.png" }
+      let(:filename) { "/images/foo.png" }
+      let(:expected) { %Q!<img src="#{url}" />! }
+      subject { 
+        o.send  :sss_image_tag,
+                url
+      }
+      it { should_not be_nil }
+      it { should == expected }
+    end
   end
 end
 
