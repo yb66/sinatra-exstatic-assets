@@ -19,7 +19,7 @@ describe Asset, :time_sensitive do
     it { should == expected }
     its(:fullpath) { should == fullpath }
     its(:timestamp) { should == Time.now.to_i }
-    its(:"is_uri?") { should be_false }
+    its(:"is_uri?") { should be_falsy }
     its(:querystring) { should == "?ts=#{Time.now.to_i}" }
   end
   context "Given a url" do
@@ -29,7 +29,7 @@ describe Asset, :time_sensitive do
     it { should == expected }
     its(:fullpath) { should be_nil }
     its(:timestamp) { should == false }
-    its(:"is_uri?") { should be_true }
+    its(:"is_uri?") { should be_truthy }
     its(:querystring) { should be_nil }
   end
 end
