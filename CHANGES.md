@@ -1,5 +1,12 @@
 # CH CH CH CHANGES! #
 
+## Friday the 2nd of January 2015, v2.0.3 ##
+
+* Just small changes to the gemspec to kill some boring warnings.
+
+----
+
+
 ## Friday the 2nd of January 2015, v2.0.2 ##
 
 * Fixed a problem with the markdown that meant the main code example wasn't output on Rubydoc.
@@ -7,6 +14,7 @@
 * Added some more specs for option passing.
 
 ----
+
 
 ## Friday the 18th of April 2014, v2.0.1 ##
 
