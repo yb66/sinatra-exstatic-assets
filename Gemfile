@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
 # Specify your gem's dependencies in sinatra-static-assets.gemspec
 gemspec
@@ -9,6 +9,7 @@ end
 
 group :test do
   gem "rspec"
+  gem "rspec-its"
   gem "rack-test"
   gem "simplecov"
   gem 'turn', :require => false

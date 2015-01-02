@@ -19,7 +19,7 @@ describe Asset, :time_sensitive do
     it { should == expected }
     its(:fullpath) { should == fullpath }
     its(:timestamp) { should == Time.now.to_i }
-    its(:"is_uri?") { should be_false }
+    its(:"is_uri?") { should be_falsy }
     its(:querystring) { should == "?ts=#{Time.now.to_i}" }
   end
   context "Given a url" do
@@ -29,7 +29,7 @@ describe Asset, :time_sensitive do
     it { should == expected }
     its(:fullpath) { should be_nil }
     its(:timestamp) { should == false }
-    its(:"is_uri?") { should be_true }
+    its(:"is_uri?") { should be_truthy }
     its(:querystring) { should be_nil }
   end
 end
@@ -98,10 +98,21 @@ describe "Private methods", :time_sensitive do
   context "Stylesheets" do
     let(:url) { "/stylesheets/winter.css" }
     let(:filename) { "/stylesheets/winter.css" }
-    let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="screen" rel="stylesheet" />! }
-    subject { o.send :sss_stylesheet_tag, url }
+    context "Given a filename" do
+      context "But no options" do
+        let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="screen" rel="stylesheet" />! }
+        subject { o.send :sss_stylesheet_tag, url }
+        it { should == expected }
+      end
+      context "with options" do
+        context "media=print" do
+          let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="print" rel="stylesheet" />! }
+          subject { o.send :sss_stylesheet_tag, url, media: "print" }
+          it { should == expected }       
+        end
+      end
+    end
     it { should_not be_nil }
-    it { should == expected }
   end
   context "Javascripts" do
     let(:url) { "/js/get_stuff.js" }
@@ -122,6 +133,17 @@ describe "Private methods", :time_sensitive do
     end
     context "Remote" do
       let(:url) { "http://example.org/images/foo.png" }
+      let(:filename) { "/images/foo.png" }
+      let(:expected) { %Q!<img src="#{url}" />! }
+      subject { 
+        o.send  :sss_image_tag,
+                url
+      }
+      it { should_not be_nil }
+      it { should == expected }
+    end
+    context "Remote and secure" do
+      let(:url) { "https://example.org/images/foo.png" }
       let(:filename) { "/images/foo.png" }
       let(:expected) { %Q!<img src="#{url}" />! }
       subject { 
