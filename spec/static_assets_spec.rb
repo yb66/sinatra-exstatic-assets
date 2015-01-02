@@ -98,10 +98,21 @@ describe "Private methods", :time_sensitive do
   context "Stylesheets" do
     let(:url) { "/stylesheets/winter.css" }
     let(:filename) { "/stylesheets/winter.css" }
-    let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="screen" rel="stylesheet" />! }
-    subject { o.send :sss_stylesheet_tag, url }
+    context "Given a filename" do
+      context "But no options" do
+        let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="screen" rel="stylesheet" />! }
+        subject { o.send :sss_stylesheet_tag, url }
+        it { should == expected }
+      end
+      context "with options" do
+        context "media=print" do
+          let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="print" rel="stylesheet" />! }
+          subject { o.send :sss_stylesheet_tag, url, media: "print" }
+          it { should == expected }       
+        end
+      end
+    end
     it { should_not be_nil }
-    it { should == expected }
   end
   context "Javascripts" do
     let(:url) { "/js/get_stuff.js" }
