@@ -19,3 +19,4 @@ docs/
 coverage/
 .rbx/
 .rspec
+*.noindex/
