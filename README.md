@@ -76,7 +76,7 @@ Here's a quick example, but there are more in the `examples` directory:
         %dd This is an interesting photo
         %dl
           %a{ href: "http://www.flickr.com/photos/redfernneil/1317915651/" }
-            = img "http://www.flickr.com/photos/redfernneil/1317915651/" width: 500, height: 250, alt: "Something about the photo"
+            = img "http://www.flickr.com/photos/redfernneil/1317915651/", width: 500, height: 250, alt: "Something about the photo"
 
 
 There is also more detailed documentation on each helper in the {Sinatra::Exstatic::Helpers} API docs.
