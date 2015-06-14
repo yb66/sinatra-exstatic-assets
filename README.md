@@ -2,7 +2,11 @@
 
 ### Master branch build status ###
 
+Master branch:
 [![Build Status](https://travis-ci.org/yb66/sinatra-exstatic-assets.png?branch=master)](https://travis-ci.org/yb66/sinatra-exstatic-assets)
+
+Develop branch:
+[![Build Status](https://travis-ci.org/yb66/sinatra-exstatic-assets.png?branch=develop)](https://travis-ci.org/yb66/sinatra-exstatic-assets)
 
 ### Preamble ###
 
