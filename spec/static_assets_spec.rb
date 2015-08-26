@@ -172,16 +172,27 @@ describe "Using them with a Sinatra app", :time_sensitive do
                                   .and_return(1367612251)
   end
   context "Main" do
-    let(:fixture_file) { "./support/fixtures/main.txt" }
-    before do
-      get "/"
+    context "/" do
+      let(:fixture_file) { "./support/fixtures/main.html" }
+      before do
+        get "/"
+      end
+      it_should_behave_like "Any route"
+      subject { last_response.body }
+      it { should == expected }
     end
-    it_should_behave_like "Any route"
-    subject { last_response.body }
-    it { should == expected }
+    context "/deeper" do
+      let(:fixture_file) { "./support/fixtures/app-deeper.html" }
+      before do
+        get "/deeper"
+      end
+      it_should_behave_like "Any route"
+      subject { last_response.body }
+      it { should == expected }
+    end
   end
   context "Sub" do
-    let(:fixture_file) { "./support/fixtures/app2.txt" }
+    let(:fixture_file) { "./support/fixtures/app2.html" }
     before do
       get "/app2"
     end
