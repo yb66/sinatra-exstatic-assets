@@ -1,5 +1,12 @@
 # CH CH CH CHANGES! #
 
+## Wednesday the 26th of August 2015, v3.0.0 ##
+
+- Fixed typo where `script_tag` had overwritten `script_name`.
+- Improved SCRIPT_NAME handling and added spec for it.
+
+----
+
 ## Friday the 2nd of January 2015 ##
 
 ### v2.0.4 ###

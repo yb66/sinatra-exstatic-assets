@@ -132,7 +132,7 @@ module Sinatra
       # @param [String,#querystring] addr
       # @param [Hash] options
       # @option options [TrueClass] :absolute see Sinatra::Helpers#uri
-      # @option options [TrueClass] :script_tag Whether to prepend the SCRIPT_TAG env variable.
+      # @option options [TrueClass] :script_name Whether to prepend the SCRIPT_NAME env variable.
       # @return [String]
       # @see Sinatra::Helpers#uri
       def sss_url_for(addr, options=nil)
@@ -140,9 +140,11 @@ module Sinatra
         opts = {timestamp: true}.merge options
         absolute = opts.delete :absolute
         absolute = false if absolute.nil?
-        script_tag = opts.delete(:script_tag)
-        script_tag = true if script_tag.nil? unless addr.is_uri?
-        href = uri addr, absolute, script_tag
+        script_name =
+          !addr.is_uri? ||
+          opts.delete(:script_name) && addr.start_with?("/")
+
+        href = uri addr, absolute, script_name
         addr.respond_to?(:querystring) && opts[:timestamp] ?
           "#{href}#{addr.querystring}" :
           href
@@ -163,7 +165,7 @@ module Sinatra
       # @param [Hash] options
       # @option options [String] :asset_dir The directory the asset is held. Defaults to Sinatra's `public_folder` setting.
       # @option options [Hash] :url_options Options for devising the URL.
-      # @option options [TrueClass] :script_tag Whether to prepend the SCRIPT_TAG env variable.
+      # @option options [TrueClass] :script_name Whether to prepend the SCRIPT_NAME env variable.
       # @return [Tag]
       def sss_stylesheet_tag(source, options = {})
         asset_dir = options.delete(:asset_dir) || settings.public_folder
@@ -276,7 +278,7 @@ module Sinatra
 
       # @param [String] source
       # @param [Hash] options
-      # @option options [Hash] :url_options script_tag
+      # @option options [Hash] :url_options script_name
       # @example
       #   favicon_tag
       #   # => <link href="/favicon.ico" rel="icon">

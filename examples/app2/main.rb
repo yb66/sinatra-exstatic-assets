@@ -6,10 +6,15 @@ module Example
     register Sinatra::Exstatic
 
     configure do
-      set :public_folder, "public"
+      set :root, __dir__
+      set :public_folder, Proc.new { File.join(root, "public") }
     end
 
     get "/" do
+      erb :index
+    end
+
+    get "/deeper" do
       erb :index
     end
   end
