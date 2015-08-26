@@ -140,9 +140,11 @@ module Sinatra
         opts = {timestamp: true}.merge options
         absolute = opts.delete :absolute
         absolute = false if absolute.nil?
-        script_tag = opts.delete(:script_tag)
-        script_tag = true if script_tag.nil? unless addr.is_uri?
-        href = uri addr, absolute, script_tag
+        script_name =
+          !addr.is_uri? ||
+          opts.delete(:script_name) && addr.start_with?("/")
+
+        href = uri addr, absolute, script_name
         addr.respond_to?(:querystring) && opts[:timestamp] ?
           "#{href}#{addr.querystring}" :
           href
