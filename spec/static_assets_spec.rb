@@ -192,12 +192,23 @@ describe "Using them with a Sinatra app", :time_sensitive do
     end
   end
   context "Sub" do
-    let(:fixture_file) { "./support/fixtures/app2.html" }
-    before do
-      get "/app2"
+    context "/app2/" do
+      let(:fixture_file) { "./support/fixtures/app2.html" }
+      before do
+        get "/app2"
+      end
+      it_should_behave_like "Any route"
+      subject { last_response.body }
+      it { should == expected }
     end
-    it_should_behave_like "Any route"
-    subject { last_response.body }
-    it { should == expected }
+    context "/app2/deeper" do
+      let(:fixture_file) { "./support/fixtures/app2-deeper.html" }
+      before do
+        get "/app2/deeper"
+      end
+      it_should_behave_like "Any route"
+      subject { last_response.body }
+      it { should == expected }
+    end
   end
 end
