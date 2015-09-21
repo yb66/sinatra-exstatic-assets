@@ -69,8 +69,11 @@ end
 
 class FakeObject
   include Sinatra::Exstatic::Private
-  def uri( addr, absolute, script_tag )
-    script_tag ? File.join( ENV["SCRIPT_NAME"], addr) : addr
+  def initialize script_name=nil
+    @script_name = script_name || public_folder
+  end
+  def uri( addr, absolute, script_name )
+    script_name ? File.join( @script_name, addr) : addr
   end
   def settings
     self
@@ -78,22 +81,34 @@ class FakeObject
   def public_folder
     "app/public"
   end
+  def xhtml
+    @xhtml ||= false
+  end
 end
 describe "Private methods", :time_sensitive do
-  let(:o) {
-    # A double, I couldn't get RSpec's to work with this
-    # probably because they're not well documented
-    # hint hint RSpec team
-    o = FakeObject.new
-  }
   let(:script_name) { "/bar" }
   let(:fullpath) { File.join asset_dir, filename }
   let(:asset_dir) { "app/public/" }
   let(:time) { Time.now.to_i }
+  let(:o) {
+    # A double, I couldn't get RSpec's to work with this
+    # probably because they're not well documented
+    # hint hint RSpec team
+    o = FakeObject.new script_name
+  }
   before do
     ENV["SCRIPT_NAME"] = script_name
     File.stub(:"exists?").with(fullpath).and_return(true)
     File.stub(:mtime).with(fullpath).and_return(time)
+  end
+  context "Favicon" do
+    let(:url) { "/favicon.ico" }
+    let(:filename) { "favicon.ico" }
+    let(:expected) { %Q!<link href="/bar/favicon.ico" rel="icon" />! }
+    subject {
+      o.send :sss_favicon_tag, url, {asset_dir: asset_dir}, {}
+    }
+    it { should == expected }
   end
   context "Stylesheets" do
     let(:url) { "/stylesheets/winter.css" }
@@ -101,13 +116,13 @@ describe "Private methods", :time_sensitive do
     context "Given a filename" do
       context "But no options" do
         let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="screen" rel="stylesheet" />! }
-        subject { o.send :sss_stylesheet_tag, url }
+        subject { o.send :sss_stylesheet_tag, url, {asset_dir: asset_dir}, {} }
         it { should == expected }
       end
       context "with options" do
         context "media=print" do
           let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="print" rel="stylesheet" />! }
-          subject { o.send :sss_stylesheet_tag, url, media: "print" }
+          subject { o.send :sss_stylesheet_tag, url, {asset_dir: asset_dir,media: "print"}, {} }
           it { should == expected }       
         end
       end
@@ -118,7 +133,7 @@ describe "Private methods", :time_sensitive do
     let(:url) { "/js/get_stuff.js" }
     let(:filename) { "/js/get_stuff.js" }
     let(:expected) { %Q!<script charset="utf-8" src="/bar/js/get_stuff.js?ts=#{time}"></script>! }
-    subject { o.send :sss_javascript_tag, url }
+    subject { o.send :sss_javascript_tag, url, {asset_dir: asset_dir}, {} }
     it { should_not be_nil }
     it { should == expected }
   end
@@ -127,7 +142,7 @@ describe "Private methods", :time_sensitive do
       let(:url) { "/images/foo.png" }
       let(:filename) { "/images/foo.png" }
       let(:expected) { %Q!<img src="/bar/images/foo.png?ts=#{time}" />! }
-      subject { o.send :sss_image_tag, url }
+      subject { o.send :sss_image_tag, url, {asset_dir: asset_dir}, {} }
       it { should_not be_nil }
       it { should == expected }
     end
@@ -137,7 +152,7 @@ describe "Private methods", :time_sensitive do
       let(:expected) { %Q!<img src="#{url}" />! }
       subject { 
         o.send  :sss_image_tag,
-                url
+                url, {asset_dir: asset_dir}, {}
       }
       it { should_not be_nil }
       it { should == expected }
@@ -148,7 +163,7 @@ describe "Private methods", :time_sensitive do
       let(:expected) { %Q!<img src="#{url}" />! }
       subject { 
         o.send  :sss_image_tag,
-                url
+                url, {asset_dir: asset_dir}, {}
       }
       it { should_not be_nil }
       it { should == expected }
@@ -205,6 +220,15 @@ describe "Using them with a Sinatra app", :time_sensitive do
       let(:fixture_file) { "./support/fixtures/app2-deeper.html" }
       before do
         get "/app2/deeper"
+      end
+      it_should_behave_like "Any route"
+      subject { last_response.body }
+      it { should == expected }
+    end
+    context "/app2/deeper" do
+      let(:fixture_file) { "./support/fixtures/app2-deeper.html" }
+      before do
+        get "/app2/deeper/and-deeper"
       end
       it_should_behave_like "Any route"
       subject { last_response.body }

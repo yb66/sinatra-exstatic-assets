@@ -65,6 +65,7 @@ module Sinatra
       # @param [String] asset_dir The asset directory. When used with Sinatra this will default to the directory defined by the `public_folder` setting.
       def initialize( filename, asset_dir=nil ) # TODO failure strategy
         if asset_dir.nil?
+          # TODO should this strip the leading slash?
           filename, asset_dir = [File.basename(filename), File.dirname(filename)]
         end
         # TODO fail if asset_dir.nil?
@@ -135,16 +136,38 @@ module Sinatra
       # @option options [TrueClass] :script_name Whether to prepend the SCRIPT_NAME env variable.
       # @return [String]
       # @see Sinatra::Helpers#uri
-      def sss_url_for(addr, options=nil)
-        options ||= {}
-        opts = {timestamp: true}.merge options
-        absolute = opts.delete :absolute
+      def sss_url_for(addr, options, url_opts)
+        absolute = url_opts.delete :absolute
         absolute = false if absolute.nil?
+        scr = url_opts.delete(:script_name)
         script_name =
-          !addr.is_uri? ||
-          opts.delete(:script_name) && addr.start_with?("/")
-
+          if addr.is_uri?
+            false
+          elsif addr.start_with?("/")
+            scr.nil? ?
+              true :
+              scr
+          else
+            false
+          end
         href = uri addr, absolute, script_name
+
+        timestamp =
+          if scr == false
+            false
+          else
+            #   timestamp |
+            #       nil       t
+            #       f     |   f
+            #       t     |   t
+            if options[:timestamp] && options[:timestamp] == false
+              false
+            else
+              true
+            end
+          end
+        opts = {timestamp: timestamp}.merge options
+
         addr.respond_to?(:querystring) && opts[:timestamp] ?
           "#{href}#{addr.querystring}" :
           href
@@ -167,10 +190,9 @@ module Sinatra
       # @option options [Hash] :url_options Options for devising the URL.
       # @option options [TrueClass] :script_name Whether to prepend the SCRIPT_NAME env variable.
       # @return [Tag]
-      def sss_stylesheet_tag(source, options = {})
-        asset_dir = options.delete(:asset_dir) || settings.public_folder
-        asset = Asset.new source, asset_dir
-        href = sss_url_for( asset, options.delete(:url_options) )
+      def sss_stylesheet_tag(source, options, url_opts)
+        asset = Asset.new source, options.delete(:asset_dir)
+        href = sss_url_for asset, options, url_opts
         Tag.new "link", DEFAULT_CSS.merge(:href => href)
                                    .merge(options)
       end
@@ -179,15 +201,15 @@ module Sinatra
       # Default options for the javascript script tags.
       DEFAULT_JS = {
 #         :type => "text/javascript", 
-        :charset => "utf-8"
+        :charset => "utf-8",
       }
 
 
       # Produce a javascript script tag.
       # @see #sss_stylesheet_tag but there is no `closed` option here.
-      def sss_javascript_tag(source, options = {})
-        asset = Asset.new source, settings.public_folder
-        href = sss_url_for asset, options.delete(:url_options)
+      def sss_javascript_tag(source, options, url_opts)
+        asset = Asset.new source, options.delete(:asset_dir)
+        href = sss_url_for asset, options, url_opts
         Tag.new("script", DEFAULT_JS.merge(:src => href)
                                             .merge(options)          
         ) {}
@@ -197,17 +219,41 @@ module Sinatra
       # Make's sure the options don't get mixed up with the other args.
       def sss_extract_options(a)
         opts = a.last.respond_to?(:keys) ?
-          a.pop :
+          a.pop || {} :
           {}
-        opts ||= {}
-        [a, opts]
+
+        url_opts = opts.empty? ?
+          {} :
+          {
+            absolute: opts.delete(:absolute),
+            script_name: opts.delete(:script_name),
+          }.reject{|k,v| v.nil? }
+        a = [nil] if a == []
+        [a, opts, url_opts]
       end
 
 
       # @see #sss_stylesheet_tag
-      def sss_image_tag(source, options = {})
-        options[:src] = sss_url_for Asset.new( source, settings.public_folder ), options.delete(:url_options)
+      def sss_image_tag(source, options, url_opts)
+        options[:src] = sss_url_for Asset.new( source, options.delete(:asset_dir) ), options, url_opts
         Tag.new "img", options
+      end
+
+
+      # @param [String] source
+      # @param [Hash] options
+      # @option options [TrueClass] :script_name whether to append the script_name environment variable or not
+      # @example
+      #   favicon_tag
+      #   # => <link href="/favicon.ico" rel="icon">
+      def sss_favicon_tag(source, options, url_opts)
+        source = "/favicon.ico" if source.nil? or source.empty?
+
+        # xhtml style like <link rel="shortcut icon" href="http://example.com/myicon.ico" />
+        options[:rel] ||= settings.xhtml ? "shortcut icon" : "icon"
+        asset = Asset.new source, options.delete(:asset_dir)
+        options[:href] = sss_url_for asset, options.merge(timestamp: false), url_opts
+        Tag.new "link", options
       end
 
     end
@@ -259,11 +305,14 @@ module Sinatra
       #   @example
       #     javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js"
       #     # => <script charset="utf-8" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-      %w{image_tag stylesheet_tag javascript_tag}.each do |method_name|
-        define_method method_name do |*sources|
-          list, options = sss_extract_options sources
+      %w{image_tag stylesheet_tag javascript_tag favicon_tag}.each do |method_name|
+        define_method method_name do |*args|
+          list, options, url_opts = sss_extract_options args
           list.map {|source|
-            send "sss_#{method_name}", source, options
+            asset_dir = options.delete(:asset_dir) ||
+                        settings.static_assets_dir ||
+                        settings.public_folder
+            send "sss_#{method_name}", source, options.merge({asset_dir: asset_dir}), url_opts
           }.join "\n"
         end
       end
@@ -276,25 +325,6 @@ module Sinatra
       alias_method :js_tag, :javascript_tag
       alias_method :script_tag, :javascript_tag
 
-      # @param [String] source
-      # @param [Hash] options
-      # @option options [Hash] :url_options script_name
-      # @example
-      #   favicon_tag
-      #   # => <link href="/favicon.ico" rel="icon">
-      def favicon_tag(*args)
-        source, options = sss_extract_options args
-        source = "favicon.ico" if source.nil? or source.empty?
-
-        # xhtml style like <link rel="shortcut icon" href="http://example.com/myicon.ico" />
-        options[:rel] ||= settings.xhtml ? "shortcut icon" : "icon"
-
-        url_options = options.delete(:url_options) || {}
-        options[:href] = sss_url_for(Asset.new(source), url_options.merge(timestamp: false))
-        
-        Tag.new "link", options
-      end
-
       alias_method :link_favicon_tag, :favicon_tag
       alias_method :favicon, :favicon_tag
 
@@ -304,6 +334,7 @@ module Sinatra
     def self.registered(app)
       app.helpers Exstatic::Helpers
       app.disable :xhtml
+      app.set :static_assets_dir, nil
     end
   end
 

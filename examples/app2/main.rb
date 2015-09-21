@@ -17,5 +17,9 @@ module Example
     get "/deeper" do
       erb :index
     end
+
+    get "/deeper/and-deeper" do
+      erb :index
+    end
   end
 end
