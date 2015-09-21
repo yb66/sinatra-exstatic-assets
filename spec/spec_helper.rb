@@ -3,12 +3,13 @@
 require 'rspec'
 require 'rspec/its'
 Spec_dir = File.expand_path( File.dirname __FILE__ )
-
+require 'pry-byebug'
 
 # code coverage
 require 'simplecov'
 SimpleCov.start do
   add_filter "/vendor/"
+  add_filter "/vendor.noindex/"
   add_filter "/bin/"
 end
 
@@ -33,7 +34,9 @@ require 'rack/test/accepts'
 require 'timecop'
 
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
 
   config.include Rack::Test::Accepts, :type => :request
 
