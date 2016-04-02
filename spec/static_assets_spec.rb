@@ -6,14 +6,22 @@ module Exstatic
 
 shared_context "mtime timestamp" do
   before(:each) do
-    File.expects(:"exists?").with(fullpath).returns(true)
-    File.expects(:mtime).with(fullpath).returns(time)
+    File.expects(:"exists?").with(fullpath)
+                            .at_least_once
+                            .returns(true)
+    File.expects(:mtime).with(fullpath)
+                        .returns(time)
   end
 end
 
 describe Asset, :time_sensitive do
+  shared_examples "for Asset file" do
+    its(:fullpath) { should == fullpath }
+    its(:"is_uri?") { should be_falsy }
+    it { should_not be_nil }
+    it { should == expected }
+  end
   let(:asset_dir) { "app/public" }
-  let(:timestamp_format) { :mtime_int }
   let(:time) { Time.now }
   subject(:asset){ Asset.new filename, asset_dir, timestamp_format }
   context "Given a file" do
@@ -21,21 +29,33 @@ describe Asset, :time_sensitive do
     let(:expected) { "image.jpg" }
     let(:fullpath) { File.join asset_dir, filename }
     context "Using mtime as the timestamp" do
-      include_context "mtime timestamp"
-      its(:timestamp) { should == Time.now.to_i }
-      its(:querystring) { should == "?ts=#{Time.now.to_i}" }
+      let(:timestamp_format) { :mtime_int }
+      context "" do
+        include_context "mtime timestamp"
+        its(:timestamp) { should == Time.now.to_i }
+        its(:querystring) { should == "?ts=#{Time.now.to_i}" }
+      end
+      include_examples "for Asset file"
     end
     context "Using sha1 as the timestamp" do
-    
+      let(:timestamp_format) { :sha1 }
+      context "" do
+        before do
+          digest_mock = mock()
+          digest_mock.expects(:hexdigest).returns( "871cb4397c5f5f146cc5583088b12c7d0a8ddc97" )
+          File.expects(:"exists?").with(fullpath).returns(true)
+          Digest::SHA1.expects(:file).with(fullpath).returns(digest_mock)
+        end
+        its(:timestamp) { should == "871cb4397c5f5f146cc5583088b12c7d0a8ddc97" }
+        its(:querystring) { should == %Q!?ts=#{"871cb4397c5f5f146cc5583088b12c7d0a8ddc97"}! }
+      end
+      include_examples "for Asset file"
     end
-    it { should_not be_nil }
-    it { should == expected }
-    its(:fullpath) { should == fullpath }
-    its(:"is_uri?") { should be_falsy }
   end
   context "Given a url" do
     let(:filename) { "http://code.jquery.com/jquery-1.9.1.min.js" }
     let(:expected) { "http://code.jquery.com/jquery-1.9.1.min.js" }
+    let(:timestamp_format) { :mtime_int }
     it { should_not be_nil }
     it { should == expected }
     its(:fullpath) { should be_nil }
