@@ -3,7 +3,7 @@
 require 'rspec'
 require 'rspec/its'
 Spec_dir = File.expand_path( File.dirname __FILE__ )
-require 'pry-byebug'
+require 'pry-byebug' if ENV["DEBUG"]
 
 # code coverage
 require 'simplecov'
@@ -34,6 +34,8 @@ require 'rack/test/accepts'
 require 'timecop'
 
 RSpec.configure do |config|
+  config.mock_with :mocha
+
   config.expect_with :rspec do |c|
     c.syntax = [:should, :expect]
   end

@@ -4,23 +4,34 @@ require_relative "../lib/sinatra/exstatic_assets.rb"
 module Sinatra
 module Exstatic
 
+shared_context "mtime timestamp" do
+  before(:each) do
+    File.expects(:"exists?").with(fullpath).returns(true)
+    File.expects(:mtime).with(fullpath).returns(time)
+  end
+end
+
 describe Asset, :time_sensitive do
   let(:asset_dir) { "app/public" }
-  subject(:asset){ Asset.new filename, asset_dir }
+  let(:timestamp_format) { :mtime_int }
+  let(:time) { Time.now }
+  subject(:asset){ Asset.new filename, asset_dir, timestamp_format }
   context "Given a file" do
-    let(:fullpath) { File.join asset_dir, filename }
-    before do
-      File.stub(:"exists?").with(fullpath).and_return(true)
-      File.stub(:mtime).with(fullpath).and_return(Time.now)
-    end
     let(:filename) { "image.jpg" }
     let(:expected) { "image.jpg" }
+    let(:fullpath) { File.join asset_dir, filename }
+    context "Using mtime as the timestamp" do
+      include_context "mtime timestamp"
+      its(:timestamp) { should == Time.now.to_i }
+      its(:querystring) { should == "?ts=#{Time.now.to_i}" }
+    end
+    context "Using sha1 as the timestamp" do
+    
+    end
     it { should_not be_nil }
     it { should == expected }
     its(:fullpath) { should == fullpath }
-    its(:timestamp) { should == Time.now.to_i }
     its(:"is_uri?") { should be_falsy }
-    its(:querystring) { should == "?ts=#{Time.now.to_i}" }
   end
   context "Given a url" do
     let(:filename) { "http://code.jquery.com/jquery-1.9.1.min.js" }
@@ -85,22 +96,20 @@ class FakeObject
     @xhtml ||= false
   end
 end
+
 describe "Private methods", :time_sensitive do
   let(:script_name) { "/bar" }
   let(:fullpath) { File.join asset_dir, filename }
   let(:asset_dir) { "app/public/" }
   let(:time) { Time.now.to_i }
+  let(:timestamp_format) { :mtime_int }
   let(:o) {
     # A double, I couldn't get RSpec's to work with this
     # probably because they're not well documented
     # hint hint RSpec team
     o = FakeObject.new script_name
   }
-  before do
-    ENV["SCRIPT_NAME"] = script_name
-    File.stub(:"exists?").with(fullpath).and_return(true)
-    File.stub(:mtime).with(fullpath).and_return(time)
-  end
+  
   context "Favicon" do
     let(:url) { "/favicon.ico" }
     let(:filename) { "favicon.ico" }
@@ -110,41 +119,51 @@ describe "Private methods", :time_sensitive do
     }
     it { should == expected }
   end
-  context "Stylesheets" do
-    let(:url) { "/stylesheets/winter.css" }
-    let(:filename) { "/stylesheets/winter.css" }
-    context "Given a filename" do
-      context "But no options" do
-        let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="screen" rel="stylesheet" />! }
-        subject { o.send :sss_stylesheet_tag, url, {asset_dir: asset_dir}, {} }
-        it { should == expected }
+  context "Accessing the file system" do
+    include_context "mtime timestamp" do
+    end
+    context "Stylesheets" do
+      before do
+        ENV["SCRIPT_NAME"] = script_name
       end
-      context "with options" do
-        context "media=print" do
-          let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="print" rel="stylesheet" />! }
-          subject { o.send :sss_stylesheet_tag, url, {asset_dir: asset_dir,media: "print"}, {} }
-          it { should == expected }       
+      let(:url) { "/stylesheets/winter.css" }
+      let(:filename) { "/stylesheets/winter.css" }
+      context "Given a filename" do
+        context "But no options" do
+          let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="screen" rel="stylesheet" />! }
+          subject { o.send :sss_stylesheet_tag, url, {asset_dir: asset_dir, timestamp_format: timestamp_format}, {} }
+          it { should == expected }
+        end
+        context "with options" do
+          context "media=print" do
+            let(:expected) { %Q!<link charset="utf-8" href="/bar/stylesheets/winter.css?ts=#{time}" media="print" rel="stylesheet" />! }
+            subject { o.send :sss_stylesheet_tag, url, {asset_dir: asset_dir,media: "print", timestamp_format: timestamp_format}, {} }
+            it { should == expected }       
+          end
         end
       end
     end
-    it { should_not be_nil }
-  end
-  context "Javascripts" do
+    context "Javascripts" do
     let(:url) { "/js/get_stuff.js" }
     let(:filename) { "/js/get_stuff.js" }
     let(:expected) { %Q!<script charset="utf-8" src="/bar/js/get_stuff.js?ts=#{time}"></script>! }
-    subject { o.send :sss_javascript_tag, url, {asset_dir: asset_dir}, {} }
+    subject { o.send :sss_javascript_tag, url, {asset_dir: asset_dir, timestamp_format: timestamp_format}, {} }
     it { should_not be_nil }
     it { should == expected }
+  end
   end
   context "Images" do
     context "Local" do
       let(:url) { "/images/foo.png" }
       let(:filename) { "/images/foo.png" }
       let(:expected) { %Q!<img src="/bar/images/foo.png?ts=#{time}" />! }
-      subject { o.send :sss_image_tag, url, {asset_dir: asset_dir}, {} }
-      it { should_not be_nil }
-      it { should == expected }
+      subject { o.send :sss_image_tag, url, {asset_dir: asset_dir, timestamp_format: :mtime_int}, {} }
+      
+      context "Using mtime as the timestamp" do
+        include_context "mtime timestamp"
+        it { should_not be_nil }
+        it { should == expected }
+      end
     end
     context "Remote" do
       let(:url) { "http://example.org/images/foo.png" }
@@ -179,12 +198,14 @@ describe "Using them with a Sinatra app", :time_sensitive do
   let(:expected) { File.read File.expand_path(fixture_file, File.dirname(__FILE__)) }
   before do
     Sinatra::Exstatic::Asset.any_instance
-                                  .stub(:exists?)
-                                  .and_return(true)
+                                  .expects(:exists?)
+                                  .at_least_once
+                                  .returns(true)
 
     Sinatra::Exstatic::Asset.any_instance
-                                  .stub(:mtime_int)
-                                  .and_return(1367612251)
+                                  .expects(:mtime_int)
+                                  .at_least_once
+                                  .returns(1367612251)
   end
   context "Main" do
     context "/" do
