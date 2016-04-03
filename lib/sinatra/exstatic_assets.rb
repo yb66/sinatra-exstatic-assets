@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'digest/sha1'
 
 # @see https://sinatrarb.com/intro The framework
 module Sinatra
@@ -57,19 +58,20 @@ module Sinatra
 
 
     # Encapsulates an asset, be it a stylesheet, an image…
-    class Asset < ::String
+    class Asset < String
 
       attr_reader :fullpath
 
       # @param [String] filename Either the file name (and path relative to the public folder) or the external HTTP link.
       # @param [String] asset_dir The asset directory. When used with Sinatra this will default to the directory defined by the `public_folder` setting.
-      def initialize( filename, asset_dir=nil ) # TODO failure strategy
+      def initialize( filename, asset_dir=nil, timestamp_format=nil ) # TODO failure strategy
         if asset_dir.nil?
           # TODO should this strip the leading slash?
           filename, asset_dir = [File.basename(filename), File.dirname(filename)]
         end
         # TODO fail if asset_dir.nil?
         super filename
+        @timestamp_format = timestamp_format
         @fullpath = File.join( asset_dir, filename ) unless is_uri?
       end
 
@@ -77,7 +79,7 @@ module Sinatra
       # If the asset is a local file this gets the timestamp.
       # @return [Integer]
       def timestamp
-        @timestamp ||= !is_uri? && exists? && mtime_int
+        @timestamp ||= !is_uri? && exists? && send(@timestamp_format)
       end
 
       # Takes the timestamp and returns it as a querystring.
@@ -119,6 +121,10 @@ module Sinatra
       # @return [Int]
       def mtime_int
         File.mtime( fullpath ).to_i
+      end
+
+      def sha1
+        Digest::SHA1.file(fullpath).hexdigest
       end
     end
 
@@ -191,7 +197,7 @@ module Sinatra
       # @option options [TrueClass] :script_name Whether to prepend the SCRIPT_NAME env variable.
       # @return [Tag]
       def sss_stylesheet_tag(source, options, url_opts)
-        asset = Asset.new source, options.delete(:asset_dir)
+        asset = Asset.new source, options.delete(:asset_dir), options.delete(:timestamp_format)
         href = sss_url_for asset, options, url_opts
         Tag.new "link", DEFAULT_CSS.merge(:href => href)
                                    .merge(options)
@@ -208,7 +214,7 @@ module Sinatra
       # Produce a javascript script tag.
       # @see #sss_stylesheet_tag but there is no `closed` option here.
       def sss_javascript_tag(source, options, url_opts)
-        asset = Asset.new source, options.delete(:asset_dir)
+        asset = Asset.new source, options.delete(:asset_dir), options.delete(:timestamp_format)
         href = sss_url_for asset, options, url_opts
         Tag.new("script", DEFAULT_JS.merge(:src => href)
                                             .merge(options)          
@@ -235,7 +241,7 @@ module Sinatra
 
       # @see #sss_stylesheet_tag
       def sss_image_tag(source, options, url_opts)
-        options[:src] = sss_url_for Asset.new( source, options.delete(:asset_dir) ), options, url_opts
+        options[:src] = sss_url_for Asset.new( source, options.delete(:asset_dir), options.delete(:timestamp_format) ), options, url_opts
         Tag.new "img", options
       end
 
@@ -251,7 +257,7 @@ module Sinatra
 
         # xhtml style like <link rel="shortcut icon" href="http://example.com/myicon.ico" />
         options[:rel] ||= settings.xhtml ? "shortcut icon" : "icon"
-        asset = Asset.new source, options.delete(:asset_dir)
+        asset = Asset.new source, options.delete(:asset_dir), options.delete(:timestamp_format)
         options[:href] = sss_url_for asset, options.merge(timestamp: false), url_opts
         Tag.new "link", options
       end
@@ -312,7 +318,10 @@ module Sinatra
             asset_dir = options.delete(:asset_dir) ||
                         settings.static_assets_dir ||
                         settings.public_folder
-            send "sss_#{method_name}", source, options.merge({asset_dir: asset_dir}), url_opts
+            timestamp_format = options.delete(:timestamp_format) ||
+                                settings.timestamp_format ||
+                                :mtime_int # default
+            send "sss_#{method_name}", source, options.merge({asset_dir: asset_dir, timestamp_format: timestamp_format}), url_opts
           }.join "\n"
         end
       end
@@ -335,6 +344,7 @@ module Sinatra
       app.helpers Exstatic::Helpers
       app.disable :xhtml
       app.set :static_assets_dir, nil
+      app.set :timestamp_format, :mtime_int # or sha1
     end
   end
 

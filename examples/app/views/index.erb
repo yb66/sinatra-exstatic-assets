@@ -19,13 +19,32 @@ rel="bookmark">Usage</a>
     <header>
         <h3>stylesheet_tag</h3>
     </header>
-    <p>The code:
-    </p>
-    <code>stylesheet_tag "/css/screen.css"</code>
-    <p>Output:</p>
-    <samp>
-      <%= Rack::Utils.escape_html( stylesheet_tag "/css/screen.css") %>
-    </samp>
+    <section>
+      <h3>Default use:</h3>
+      <p>By default, the querystring is appended with parameter of "ts" (for <strong>t</strong>ime<strong>s</strong>tamp) and the mtime of the file.
+      <p>The code:
+      </p>
+      <code>stylesheet_tag "/css/screen.css"</code>
+      <p>Output:</p>
+      <samp>
+        <%= Rack::Utils.escape_html( stylesheet_tag "/css/screen.css") %>
+      </samp>
+    </section>
+    <section>
+      <h3>Alternative timestamp format</h3>
+      <p>You can choose to take an SHA1 of the file instead:</p>
+      <code>stylesheet_tag "/css/screen.css", timestamp_format: :sha1</code>
+      <p>Output:</p>
+      <samp>
+        <%= Rack::Utils.escape_html( stylesheet_tag "/css/screen.css", timestamp_format: :sha1) %>
+      </samp>
+      <p>To set the timestamp for all calls, use the settings object:</p>
+      <code>set :timestamp_format, :sha1</code>
+      <p>It's set to :mtime_int by default. The timestamp formatting applies to all method calls (except for favicon, because favicons aren't cached in the same manner) but can be overridden by including the option in the method call e.g.</p>
+      <code>set :timestamp_format, :sha1</code>
+      <code>stylesheet_tag "/css/screen.css", timestamp_format: :mtime_int</code>
+      <p>Would mean that the resultant stylesheet would have an SHA1 string appended, but other method calls without the "timestamp_format: :mtime_int" would have an mtime appended.</p>
+    </section>
     <footer><p>Also known as:
       <ul>
         <li><code>css_tag</code></li>
@@ -37,13 +56,17 @@ rel="bookmark">Usage</a>
     <header>
       <h3>javascript_tag</h3>
     </header>
-    <p>The code:
-    </p>
-    <code>javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js"</code>
-    <p>Output:</p>
-    <samp>
-      <%= Rack::Utils.escape_html( javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js") %>
-    </samp>
+    <section>
+      <h3>Using a URL</h3>
+      <p>The code:
+      </p>
+      <code>javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js"</code>
+      <p>Output:</p>
+      <samp>
+        <%= Rack::Utils.escape_html( javascript_tag "http://code.jquery.com/jquery-1.9.1.min.js") %>
+      </samp>
+      <p>When a URL is given, no timestamp is appended. If the javascript was a file, then like stylesheet_tag above, it would have a timestamp appended.</p>
+    </section>
     <footer><p>Also known as:
       <ul>
         <li><code>javascript_include_tag</code></li>

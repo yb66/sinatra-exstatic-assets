@@ -10,6 +10,7 @@ end
 group :test do
   gem "rspec"
   gem "rspec-its"
+  gem "mocha"
   gem "rack-test"
   gem "simplecov"
   gem 'turn', :require => false
