@@ -1,5 +1,6 @@
 require 'spec_helper'
-require_relative "../lib/sinatra/exstatic_assets.rb"
+#require_relative "../lib/sinatra/exstatic_assets.rb"
+require_relative "../lib/sinatra/exstatic_assets/formats.rb"
 
 module Sinatra
 module Exstatic
