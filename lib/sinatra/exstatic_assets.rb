@@ -122,10 +122,6 @@ module Sinatra
       def mtime_int
         File.mtime( fullpath ).to_i
       end
-
-      def sha1
-        Digest::SHA1.file(fullpath).hexdigest
-      end
     end
 
 
@@ -340,11 +336,12 @@ module Sinatra
     end
 
     # Extending
+    # @see {Sinatra::Exstatic::Formats} to extend timestamp_format
     def self.registered(app)
       app.helpers Exstatic::Helpers
       app.disable :xhtml
       app.set :static_assets_dir, nil
-      app.set :timestamp_format, :mtime_int # or sha1
+      app.set :timestamp_format, :mtime_int
     end
   end
 

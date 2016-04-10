@@ -85,6 +85,22 @@ Here's a quick example, but there are more in the `examples` directory:
 
 There is also more detailed documentation on each helper in the {Sinatra::Exstatic::Helpers} API docs.
 
+## Formats ##
+
+The time format is the result of the file's `mtime`. If you wish for a different kind of format, SHA1 of the file is available (and I may add more). To use:
+
+      require 'sinatra/exstatic_assets/formats'
+      register Sinatra::Exstatic
+
+      configure do
+        set :timestamp_format, :sha1
+      end
+
+And now the value returned will be the SHA1 hash of the file. You can override the choice by passing the `timestamp_format` to the method:
+
+      = css_tag "/css/screen.css", timestamp_format: :mtime
+
+
 ### TODO ###
 
 * Make it easy to pass in caching options.
