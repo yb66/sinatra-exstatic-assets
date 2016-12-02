@@ -1,5 +1,13 @@
 # CH CH CH CHANGES! #
 
+## Friday the 2nd of December 2016, v3.1.0 ##
+
+- Fixed a subtle bug with script_name.
+- Improved favicon method.
+- Added timestamp formatting.
+
+----
+
 ## Wednesday the 26th of August 2015, v3.0.0 ##
 
 - Fixed typo where `script_tag` had overwritten `script_name`.
