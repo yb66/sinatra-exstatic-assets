@@ -1,5 +1,13 @@
 # CH CH CH CHANGES! #
 
+## Saturday the 13th of January 2018, v3.1.1 ##
+
+- Sinatra v2 is out, checked the lib works with it, loosened the version constraints
+  in the gemspec.
+
+----
+
+
 ## Friday the 2nd of December 2016, v3.1.0 ##
 
 - Fixed a subtle bug with script_name.
