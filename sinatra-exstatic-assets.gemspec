@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{A Sinatra extension of helpers for static assets.}
   s.description = %q{Helpers for writing the HTML and caching of static assets. A fork of Sinatra Static Assets.}
 
-  s.add_runtime_dependency 'sinatra', '~>1'
+  s.add_runtime_dependency 'sinatra', '>= 1.0.0', "<= 3.0.0"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
