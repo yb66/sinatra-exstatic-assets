@@ -19,13 +19,13 @@ group :test do
 end
 
 group :development do
-  gem 'json', '~> 1.8.3'
+  gem 'json', '>= 2.3.0'
   gem "rake"
   unless RUBY_ENGINE == 'jruby' || RUBY_ENGINE == "rbx"
     gem "pry-byebug"
     gem "pry-doc"
   end
-  gem 'webrick', '~> 1.3.1' # get rid of stupid warnings.
+  gem 'webrick', '>= 1.3.1' # get rid of stupid warnings.
 end
 
 group :documentation do
